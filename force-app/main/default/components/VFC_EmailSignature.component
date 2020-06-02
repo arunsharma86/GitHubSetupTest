@@ -1,0 +1,47 @@
+<!-- Below "access" attribute must be set to global when it is being used by a Visualforce email template-->
+<apex:component access="global" controller="CNT_EmailSignature">
+    <apex:attribute name="brand" type="String" assignTo="{!brandName}" description="This is the name of brand to be queried"
+                    />
+    <apex:attribute name="caseId" type="String" assignTo="{!currentCaseId}" description="Id of current case" />
+    <table id="Signature">
+        <apex:outputPanel rendered="{! LstEmailSignatureInformation.size > 0 }" layout="block">
+            <tr>
+                <!-- It will render brand logo -->
+                <td>
+                    <apex:image value="{!LstEmailSignatureInformation[0].Image_URL__c}" alt="{!brandName}" rendered="{! LstEmailSignatureInformation[0].URL_Type__c == 'Brand Logo'}"/>
+                </td>
+                <td style="text-align: left;">
+                    <table cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td colspan="{! IF(LstEmailSignatureInformation[0].URL_Type__c == 'Brand Logo', LstEmailSignatureInformation.size - 1, LstEmailSignatureInformation.size) }"
+                                style="{! IF(OR(LstEmailSignatureInformation.size > 1, LstEmailSignatureInformation[0].URL_Type__c != 'Brand Logo'), '', 'display: none') }">
+                                Click to follow us on Social:
+                            </td>
+                        </tr>
+                        <tr style="display:flex;">
+                            <apex:repeat var="emailSignature" first="{! IF(LstEmailSignatureInformation[0].URL_Type__c == 'Brand Logo', 1, 0)}" value="{!LstEmailSignatureInformation}">
+                                <!--It will render all the social links of specific brand-->
+                                <td style="margin-right:1em;">
+                                    <apex:outputLink value="{!emailSignature.URL__c}">
+                                        <apex:image value="{!emailSignature.Image_URL__c}" />
+                                    </apex:outputLink>
+                                </td>
+                            </apex:repeat>
+                        </tr>
+                        <tr>
+                            <td colspan="{! IF(LstEmailSignatureInformation[0].URL_Type__c == 'Brand Logo', LstEmailSignatureInformation.size - 1, LstEmailSignatureInformation.size) }">
+                                <a href='http://www.drinksmart.com'>
+                                    <img src='https://embed.widencdn.net/img/beamsuntory/b7e2isfgjw/101x26px/DrinkSmart.jpg' alt='Drink Smart' />
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </apex:outputPanel>
+    </table>
+    
+    <!-- Case Thread Id -->
+    <span>{!ThreadId}</span>
+    
+</apex:component>
